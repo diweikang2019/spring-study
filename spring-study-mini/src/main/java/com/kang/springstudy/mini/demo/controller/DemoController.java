@@ -4,6 +4,7 @@ import com.kang.springstudy.mini.demo.service.DemoService;
 import com.kang.springstudy.mini.framework.annotation.MyAutowired;
 import com.kang.springstudy.mini.framework.annotation.MyController;
 import com.kang.springstudy.mini.framework.annotation.MyRequestMapping;
+import com.kang.springstudy.mini.framework.annotation.MyRequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -21,7 +22,7 @@ public class DemoController {
     private DemoService demoService;
 
     @MyRequestMapping("query")
-    public void query(HttpServletRequest request, HttpServletResponse response, String name) throws IOException {
+    public void query(HttpServletRequest request, HttpServletResponse response, @MyRequestParam("name") String name) throws IOException {
         String result = demoService.query(name);
 
         response.getWriter().write(result);
