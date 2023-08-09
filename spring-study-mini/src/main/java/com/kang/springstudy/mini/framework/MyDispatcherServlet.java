@@ -209,6 +209,7 @@ public class MyDispatcherServlet extends HttpServlet {
             if (file.isDirectory()) {
                 doScanner(scanPackage + "." + file.getName());
             } else {
+                // 只扫描class文件
                 if (!file.getName().endsWith(".class")) {
                     continue;
                 }
@@ -249,12 +250,12 @@ public class MyDispatcherServlet extends HttpServlet {
                     Object instance = clazz.newInstance();
                     ioc.put(beanName, instance);
 
-                    // 3、如果是接口，只能初始化的它的实现类
+                    // 3、遍历实现的所有接口
                     for (Class<?> i : clazz.getInterfaces()) {
                         if (ioc.containsKey(i.getName())) {
                             throw new Exception("The " + i.getName() + " is exists, please use alies!!");
                         }
-                        // 直接把接口的类型当成key
+                        // 直接把接口的类型当成key，value为实现类
                         ioc.put(i.getName(), instance);
                     }
                 }
@@ -286,7 +287,7 @@ public class MyDispatcherServlet extends HttpServlet {
                 }
 
                 // 代码在反射面前，那就是裸奔
-                // 强制访问，强吻
+                // 强制访问
                 field.setAccessible(true);
                 try {
                     field.set(entry.getValue(), ioc.get(beanName));
